@@ -63,8 +63,7 @@ https://NEW-USER.github.io/skill-notes/
 `astro.config.mjs`の既定値を変更します。
 
 ```javascript
-const site =
-  process.env.SITE_URL ?? "https://NEW-USER.github.io/skill-notes/";
+const site = process.env.SITE_URL ?? "https://NEW-USER.github.io/skill-notes/";
 const base = process.env.BASE_PATH ?? "/skill-notes";
 ```
 
@@ -92,10 +91,10 @@ Settings
 
 次の2つを登録します。
 
-| Name | Value |
-| --- | --- |
-| `SITE_URL` | `https://NEW-USER.github.io/skill-notes/` |
-| `BASE_PATH` | `/skill-notes` |
+| Name        | Value                                     |
+| ----------- | ----------------------------------------- |
+| `SITE_URL`  | `https://NEW-USER.github.io/skill-notes/` |
+| `BASE_PATH` | `/skill-notes`                            |
 
 リポジトリ名の大文字・小文字も、実際の名前に合わせてください。
 

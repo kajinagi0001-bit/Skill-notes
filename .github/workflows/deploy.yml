@@ -37,7 +37,7 @@ jobs:
           BASE_PATH: ${{ vars.BASE_PATH || '/Skill-notes' }}
         run: npm run validate
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 

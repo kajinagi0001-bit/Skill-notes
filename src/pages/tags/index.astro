@@ -1,0 +1,33 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {
+  getPublishedArticles,
+  groupByValue,
+  taxonomySlug,
+} from "@/utils/articles";
+import { withBase } from "@/utils/urls";
+
+const groups = groupByValue(
+  await getPublishedArticles(),
+  (article) => article.data.tags,
+);
+---
+
+<BaseLayout title="タグ" description="技術記事をタグから横断的に探せます。">
+  <div class="page-shell page-heading">
+    <p class="eyebrow">Tags</p>
+    <h1>タグ</h1>
+    <p>技術やツールのキーワードから記事を探せます。</p>
+  </div>
+  <ul class="page-shell tag-cloud">
+    {
+      [...groups.entries()].map(([tag, articles]) => (
+        <li>
+          <a href={withBase(`/tags/${taxonomySlug(tag)}/`)}>
+            #{tag} <span>{articles.length}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

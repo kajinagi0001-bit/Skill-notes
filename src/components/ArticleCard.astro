@@ -1,0 +1,39 @@
+---
+import type { Article } from "@/utils/articles";
+import { articleSlug, formatDate, taxonomySlug } from "@/utils/articles";
+import { withBase } from "@/utils/urls";
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+---
+
+<article class="article-card">
+  <div class="card-meta">
+    <a href={withBase(`/categories/${taxonomySlug(article.data.category)}/`)}>
+      {article.data.category}
+    </a>
+    <time datetime={article.data.publishedAt.toISOString()}>
+      {formatDate(article.data.publishedAt)}
+    </time>
+  </div>
+  <h2>
+    <a href={withBase(`/articles/${articleSlug(article)}/`)}
+      >{article.data.title}</a
+    >
+  </h2>
+  <p>{article.data.description}</p>
+  {
+    article.data.tags.length > 0 && (
+      <ul class="tag-list" aria-label="タグ">
+        {article.data.tags.map((tag) => (
+          <li>
+            <a href={withBase(`/tags/${taxonomySlug(tag)}/`)}>#{tag}</a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</article>

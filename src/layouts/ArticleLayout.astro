@@ -1,0 +1,138 @@
+---
+import ArticleCard from "@/components/ArticleCard.astro";
+import TableOfContents from "@/components/TableOfContents.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import type { Article } from "@/utils/articles";
+import { articleSlug, formatDate, taxonomySlug } from "@/utils/articles";
+import { withBase } from "@/utils/urls";
+import { SITE } from "@/consts";
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  article: Article;
+  headings: Heading[];
+  previous?: Article;
+  next?: Article;
+  related: Article[];
+}
+
+const { article, headings, previous, next, related } = Astro.props;
+const canonical = new URL(
+  withBase(`/articles/${articleSlug(article)}/`),
+  Astro.site,
+);
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  headline: article.data.title,
+  description: article.data.description,
+  datePublished: article.data.publishedAt.toISOString(),
+  dateModified: (
+    article.data.updatedAt ?? article.data.publishedAt
+  ).toISOString(),
+  author: {
+    "@type": "Person",
+    name: article.data.author ?? SITE.author,
+  },
+  mainEntityOfPage: canonical.toString(),
+};
+---
+
+<BaseLayout
+  title={article.data.title}
+  description={article.data.description}
+  image={article.data.image}
+>
+  <article class="article-page" data-pagefind-body>
+    <header class="article-header">
+      <nav class="breadcrumbs" aria-label="パンくずリスト">
+        <a href={withBase("/")}>トップ</a>
+        <span aria-hidden="true">/</span>
+        <a href={withBase("/articles/")}>記事</a>
+      </nav>
+      <p class="eyebrow">
+        <a
+          href={withBase(`/categories/${taxonomySlug(article.data.category)}/`)}
+        >
+          {article.data.category}
+        </a>
+      </p>
+      <h1 data-pagefind-meta="title">{article.data.title}</h1>
+      <p class="lead">{article.data.description}</p>
+      <div class="article-dates">
+        <span
+          >公開: <time datetime={article.data.publishedAt.toISOString()}>
+            {formatDate(article.data.publishedAt)}
+          </time></span
+        >
+        {
+          article.data.updatedAt && (
+            <span>
+              更新:{" "}
+              <time datetime={article.data.updatedAt.toISOString()}>
+                {formatDate(article.data.updatedAt)}
+              </time>
+            </span>
+          )
+        }
+      </div>
+      <ul class="tag-list" aria-label="タグ">
+        {
+          article.data.tags.map((tag) => (
+            <li>
+              <a href={withBase(`/tags/${taxonomySlug(tag)}/`)}>#{tag}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </header>
+    <div class="article-grid">
+      <div class="prose">
+        <slot />
+      </div>
+      <TableOfContents headings={headings} />
+    </div>
+  </article>
+  <nav class="article-pagination" aria-label="前後の記事">
+    <div>
+      {
+        previous && (
+          <a href={withBase(`/articles/${articleSlug(previous)}/`)}>
+            ← {previous.data.title}
+          </a>
+        )
+      }
+    </div>
+    <div>
+      {
+        next && (
+          <a href={withBase(`/articles/${articleSlug(next)}/`)}>
+            {next.data.title} →
+          </a>
+        )
+      }
+    </div>
+  </nav>
+  {
+    related.length > 0 && (
+      <section class="page-shell related">
+        <h2>関連記事</h2>
+        <div class="card-grid">
+          {related.map((item) => (
+            <ArticleCard article={item} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify(structuredData)}
+  />
+</BaseLayout>

@@ -1,0 +1,36 @@
+---
+import ArticleCard from "@/components/ArticleCard.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {
+  getPublishedArticles,
+  groupByValue,
+  taxonomySlug,
+} from "@/utils/articles";
+
+export async function getStaticPaths() {
+  const groups = groupByValue(
+    await getPublishedArticles(),
+    (article) => article.data.tags,
+  );
+  return [...groups.entries()].map(([tag, articles]) => ({
+    params: { tag: taxonomySlug(tag) },
+    props: { tag, articles },
+  }));
+}
+
+const { tag, articles } = Astro.props;
+---
+
+<BaseLayout
+  title={`タグ: ${tag}`}
+  description={`${tag}タグが付いた技術記事一覧です。`}
+>
+  <div class="page-shell page-heading">
+    <p class="eyebrow">Tag</p>
+    <h1>#{tag}</h1>
+    <p>{articles.length}件の記事があります。</p>
+  </div>
+  <div class="page-shell card-grid">
+    {articles.map((article) => <ArticleCard article={article} />)}
+  </div>
+</BaseLayout>

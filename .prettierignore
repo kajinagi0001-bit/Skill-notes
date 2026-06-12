@@ -1,0 +1,6 @@
+.astro
+dist
+node_modules
+public/pagefind
+package-lock.json
+PLAN.md

@@ -1,0 +1,21 @@
+---
+import ArticleCard from "@/components/ArticleCard.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getPublishedArticles } from "@/utils/articles";
+
+const articles = await getPublishedArticles();
+---
+
+<BaseLayout
+  title="記事一覧"
+  description="公開中の技術記事を新しい順に掲載しています。"
+>
+  <div class="page-shell page-heading">
+    <p class="eyebrow">Articles</p>
+    <h1>記事一覧</h1>
+    <p>{articles.length}件の技術ノートを公開しています。</p>
+  </div>
+  <div class="page-shell card-grid">
+    {articles.map((article) => <ArticleCard article={article} />)}
+  </div>
+</BaseLayout>

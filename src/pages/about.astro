@@ -1,0 +1,29 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { SITE } from "@/consts";
+---
+
+<BaseLayout title="このサイトについて">
+  <article class="page-shell prose standalone">
+    <p class="eyebrow">About</p>
+    <h1>このサイトについて</h1>
+    <p>
+      {
+        SITE.title
+      }は、Codexに投げた技術的な疑問を一度きりの回答で終わらせず、検証可能な技術記事として残すためのサイトです。
+    </p>
+    <h2>記事の方針</h2>
+    <ul>
+      <li>対象バージョン、検証日、前提条件を明記します。</li>
+      <li>一次資料を優先し、参考資料へのリンクを掲載します。</li>
+      <li>事実と推測、推奨と選択肢を区別します。</li>
+      <li>古くなった情報は更新日と変更点を記録します。</li>
+    </ul>
+    <h2>運営と連絡先</h2>
+    <p>
+      記事の誤りや改善案は
+      <a href={`${SITE.repository}/issues`}>GitHub Issues</a>
+      で受け付けています。
+    </p>
+  </article>
+</BaseLayout>

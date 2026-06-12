@@ -1,0 +1,64 @@
+---
+import ArticleCard from "@/components/ArticleCard.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {
+  getPublishedArticles,
+  groupByValue,
+  taxonomySlug,
+} from "@/utils/articles";
+import { withBase } from "@/utils/urls";
+
+const articles = await getPublishedArticles();
+const categories = groupByValue(articles, (article) => [article.data.category]);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <div class="page-shell">
+      <p class="eyebrow">Question to Knowledge</p>
+      <h1>疑問を、あとから使える<br />技術ノートへ。</h1>
+      <p>
+        Codexに投げた疑問を起点に、調査した事実、検証手順、判断の理由をMarkdownの記事として蓄積します。
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href={withBase("/articles/")}>記事を読む</a>
+        <a class="button secondary" href={withBase("/about/")}
+          >このサイトについて</a
+        >
+      </div>
+    </div>
+  </section>
+  <section class="page-shell section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Latest</p>
+        <h2>新着記事</h2>
+      </div>
+      <a href={withBase("/articles/")}>すべて見る →</a>
+    </div>
+    <div class="card-grid">
+      {articles.slice(0, 6).map((article) => <ArticleCard article={article} />)}
+    </div>
+  </section>
+  <section class="page-shell section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Explore</p>
+        <h2>カテゴリから探す</h2>
+      </div>
+    </div>
+    <div class="category-grid">
+      {
+        [...categories.entries()].map(([category, items]) => (
+          <a
+            class="category-card"
+            href={withBase(`/categories/${taxonomySlug(category)}/`)}
+          >
+            <span>{category}</span>
+            <strong>{items.length} 記事</strong>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

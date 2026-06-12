@@ -1,0 +1,34 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import {
+  getPublishedArticles,
+  groupByValue,
+  taxonomySlug,
+} from "@/utils/articles";
+import { withBase } from "@/utils/urls";
+
+const groups = groupByValue(await getPublishedArticles(), (article) => [
+  article.data.category,
+]);
+---
+
+<BaseLayout title="カテゴリ" description="技術記事をカテゴリ別に探せます。">
+  <div class="page-shell page-heading">
+    <p class="eyebrow">Categories</p>
+    <h1>カテゴリ</h1>
+    <p>主題ごとに技術ノートを整理しています。</p>
+  </div>
+  <div class="page-shell category-grid">
+    {
+      [...groups.entries()].map(([category, articles]) => (
+        <a
+          class="category-card"
+          href={withBase(`/categories/${taxonomySlug(category)}/`)}
+        >
+          <span>{category}</span>
+          <strong>{articles.length} 記事</strong>
+        </a>
+      ))
+    }
+  </div>
+</BaseLayout>

@@ -1,0 +1,42 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { withBase } from "@/utils/urls";
+
+const pagefindUrl = withBase("/pagefind/pagefind-ui.js");
+---
+
+<BaseLayout
+  title="検索"
+  description="公開中の技術記事を全文検索できます。"
+  noindex
+>
+  <div class="page-shell page-heading" data-pagefind-ignore>
+    <p class="eyebrow">Search</p>
+    <h1>記事を検索</h1>
+    <p>タイトル、概要、見出し、本文からキーワードを検索します。</p>
+  </div>
+  <div class="page-shell search-container" data-pagefind-ignore>
+    <div id="search"></div>
+    <noscript>検索機能を利用するにはJavaScriptを有効にしてください。</noscript>
+  </div>
+  <link rel="stylesheet" href={withBase("/pagefind/pagefind-ui.css")} />
+  <script is:inline define:vars={{ pagefindUrl }}>
+    import(pagefindUrl).then(({ PagefindUI }) => {
+      new PagefindUI({
+        element: "#search",
+        showSubResults: true,
+        translations: {
+          placeholder: "キーワードを入力",
+          clear_search: "クリア",
+          load_more: "さらに表示",
+          search_label: "サイト内検索",
+          filters_label: "絞り込み",
+          zero_results: "[SEARCH_TERM] に一致する記事はありません",
+          many_results: "[SEARCH_TERM] の検索結果: [COUNT]件",
+          one_result: "[SEARCH_TERM] の検索結果: 1件",
+          searching: "[SEARCH_TERM] を検索中...",
+        },
+      });
+    });
+  </script>
+</BaseLayout>

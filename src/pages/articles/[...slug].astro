@@ -1,0 +1,40 @@
+---
+import ArticleLayout from "@/layouts/ArticleLayout.astro";
+import { articleSlug, getPublishedArticles } from "@/utils/articles";
+import { render } from "astro:content";
+
+export async function getStaticPaths() {
+  const articles = await getPublishedArticles();
+  return articles.map((article, index) => ({
+    params: { slug: articleSlug(article) },
+    props: {
+      article,
+      previous: articles[index + 1],
+      next: articles[index - 1],
+      related: articles
+        .filter(
+          (candidate) =>
+            candidate.id !== article.id &&
+            (candidate.data.category === article.data.category ||
+              candidate.data.tags.some((tag) =>
+                article.data.tags.includes(tag),
+              )),
+        )
+        .slice(0, 3),
+    },
+  }));
+}
+
+const { article, previous, next, related } = Astro.props;
+const { Content, headings } = await render(article);
+---
+
+<ArticleLayout
+  article={article}
+  headings={headings}
+  previous={previous}
+  next={next}
+  related={related}
+>
+  <Content />
+</ArticleLayout>

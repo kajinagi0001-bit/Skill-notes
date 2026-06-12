@@ -1,0 +1,35 @@
+---
+import { NAV_ITEMS, SITE } from "@/consts";
+import { withBase } from "@/utils/urls";
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a
+      class="brand"
+      href={withBase("/")}
+      aria-label={`${SITE.title} トップページ`}
+    >
+      <span class="brand-mark" aria-hidden="true">&gt;_</span>
+      <span>{SITE.title}</span>
+    </a>
+    <nav aria-label="メインナビゲーション">
+      <ul>
+        {
+          NAV_ITEMS.map((item) => (
+            <li>
+              <a href={withBase(item.href)}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <button
+      class="theme-toggle"
+      type="button"
+      aria-label="配色テーマを切り替える"
+    >
+      <span class="theme-icon" aria-hidden="true">◐</span>
+    </button>
+  </div>
+</header>

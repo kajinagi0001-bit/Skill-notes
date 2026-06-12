@@ -1,0 +1,14 @@
+---
+import { SITE } from "@/consts";
+import { withBase } from "@/utils/urls";
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p>&copy; {new Date().getFullYear()} {SITE.author}</p>
+    <div class="footer-links">
+      <a href={SITE.repository}>GitHub</a>
+      <a href={withBase("/rss.xml")}>RSS</a>
+    </div>
+  </div>
+</footer>
